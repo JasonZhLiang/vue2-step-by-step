@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "scripts": {
+    "webpack": "cross-env NODE_ENV=development webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+  },
+  "dependencies": {
+    "bootstrap-sass": "^3.3.7",
+    "jquery": "^3.3.1",
+    "laravel-mix": "^2.1.14",
+    "lodash": "^4.17.11",
+    "vue": "^2.5.17",
+    "vue-resource": "^1.5.1"
+  }
+}
