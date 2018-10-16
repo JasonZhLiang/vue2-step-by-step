@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <style>
+        .color-red {color:red;}
+        .color-blue {color:blue;}
+        .is-loading {background: red}
+        body {padding-top: 40px}
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+    <!--<link rel="stylesheet" type="text/css" href="./dist/aapp.css">-->
+</head>
+<body>
+
+    <div class="tabs is-boxed">
+        <ul>
+            <li class="is-active">
+                <a>
+                    <span class="icon is-small"><i class="fas fa-image" aria-hidden="true"></i></span>
+                    <span>Pictures</span>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <span class="icon is-small"><i class="fas fa-music" aria-hidden="true"></i></span>
+                    <span>Music</span>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <span class="icon is-small"><i class="fas fa-film" aria-hidden="true"></i></span>
+                    <span>Videos</span>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true"></i></span>
+                    <span>Documents</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="root" class="content container">
+        <input type="text" id="input" v-model="message">
+
+
+        <p>The value of the input is : {{message}}.</p>
+
+        <p>The value of the info inside the Vue data is : {{info}}.</p>
+
+
+        <ul>
+            <li v-for="a in names">{{a}}</li>
+            <li v-for="name in names" v-text="name"></li><!--this is same as above-->
+        </ul>
+
+        <!--<input id="inputAdd" type="text"></input>-->
+        <!--<button id="button">Add Name</button>-->
+
+
+        <input id="inputAdd" type="text" v-model="newName" v-on:keyUp="sayHello"></input>
+        <!--<button v-on:click="addName">Add Name</button> &lt;!&ndash;onClick is a method or expression can be write here&ndash;&gt;-->
+        <!--<button v-on:click="addName">Add Name</button>-->
+        <button @click="addName">Add Name</button><!--@ is shorthand for v-on-->
+
+        <br><br>
+
+        <!--<button v-bind:title="title">Hover over me</button>-->
+        <button :title="title">Hover over me</button><!--: is shorthand for v-bind-->
+
+        <h1 :class="className">Using bind class</h1><!--bulma.css cannot recognize color-red class, try this to comment out the bulma stylesheet->
+
+        <button :class="{'is-loading':true}">{} this is an object syntax bind class directly, without using data in Vue</button>
+
+        <button :class="{'is-loading':isloading}" @click="toggleClass">Toggle me</button><!--{} this is an object syntax-->
+
+        <h1 v-text="new Date()"></h1>
+
+
+        <h1>
+            {{message.split('').reverse().join('')}}
+
+            {{reversedMessage}}
+        </h1>
+
+        <h2>incompleted tasks using v-if</h2>
+
+        <ul>
+            <li v-for="ss in tasks" v-if="!ss.completed" v-text="ss.description"></li>
+        </ul>
+
+        <h2>incompleted tasks using computed</h2>
+
+        <ul>
+            <li v-for="ss in incompletedTasks" v-text="ss.description"></li>
+        </ul>
+
+        <message title="Hello Universe" body="Bla Bla Bla."></message>
+
+    </div>
+
+    <task>this part will not work because it is outside of Vue el defined area.</task>
+
+    <div id="root1"  class="container">
+        <task>go to the store {{titleContent}}</task>
+        <task>go to the bank</task>
+        <task></task>
+
+        <task-list></task-list>
+
+        <message title="hello world" body="Lorem ipsum dolor sit amet."></message>
+
+        <message title="Hello Universe" body="Bla Bla Bla."></message>
+
+        <modal v-if="showModal" @close="showModal = false">insert any text here</modal><!--make an announcement at close, this is a custom event, same as official event, such as click, keyUp, keyDown-->
+        <button @click="showModal = true" >Show Modal</button>
+
+        <tabs>
+            <tab icon="fas fa-music" name="About Us" :selected="true">
+                <h1>Here is the content for the about us tab.</h1>
+            </tab>
+
+            <tab icon="fas fa-film" name="About Our Culture">
+                <h1>Here is the content for the about our culture tab.</h1>
+            </tab>
+
+            <tab icon="far fa-file-alt" name="About Our Vision">
+                <h1>Here is the content for the about our vision tab.</h1>
+            </tab>
+            <task name="add another vueComponent">test $children components inside tabs, now will return 4</task>
+        </tabs>
+        <br>
+        <p v-if="couponApplied" v-text="coupontext"></p>
+        <coupon @applied="onCouponApplied" @notapplied="couponApplied = false"></coupon>
+
+        <modalcard v-if="showModal1" @close="showModal1 = false">
+            <!--<div slot="header">My Title</div>&lt;!&ndash;if you don't like any tag wrap the name slot, use template tag&ndash;&gt;-->
+            <template slot="header">My Title</template><!--anyting without name slot will be default slot-->
+            here is main content.
+            <div slot="footer">
+                <button class="button is-success">Save changes</button>
+                <button class="button">Cancel</button>
+            </div>
+        </modalcard>
+        <button @click="showModal1 = true" >Show Modal Card</button>
+
+        <progress-view inline-template><!--we will tell the Vue anything between the tag should be considered as the template just like defined inside component-->
+            <div>
+                <h1>Your Progress Through This Course Is {{completionRate}}%</h1>
+                <p><button @click="completionRate += 10">Update Completion
+                    Rate</button></p>
+            </div>
+        </progress-view>
+
+    </div>
+
+
+    <!--shared state 101 start noted: the script must be underneath the div-->
+
+    <div id="one">
+        <h1>
+            {{shared.user.name}}
+        </h1>
+    </div>
+
+    <div id="two">
+        <h1>
+            {{shared.user.name}}
+        </h1>
+    </div>
+
+    <div id="app">
+        <!--<input type="text" v-model="coupon">-->
+        <!--below is equivalent to above, bind the value listen for the input event and update the value-->
+        <!--<input type="text" :value="coupon" @input="coupon=$event.target.value">-->
+
+        <!--so, for user defined component if want to use v-model, we have to think a way to emit the input event as shows above-->
+        <coupon v-model="coupon"></coupon>
+
+
+    </div>
+
+    <!--shared state 101  end-->
+
+
+    <script src="https://unpkg.com/vue@2.1.8/dist/vue.js"></script>
+
+    <script src="main.js"></script>
+
+    <script src="app.js"></script><!--shared state 101 -->
+
+
+    <script>
+//        let data ={
+//            message:'Hello World'
+//        };
+//
+////        document.querySelector('#input').value = data.message;//this is javascript way to bind data to DOM
+//
+//        new Vue({
+//
+//            el: '#root', //set the service area, it means only data can be used within the div which id is root
+//
+//            data: data
+//
+//        });
+
+
+// using below to replace all the code above
+        var app = new Vue({
+
+            el: '#root', //set the service area, it means only data can be used within the div which id is root
+
+            data: {     //data is sort of like Module of MVC and this is instantly framework, that means when you change the value of view the module is change as well. this is single source of trues
+                message: 'Hello World',
+                info: 'interest',
+                newName:'',
+                names:['Joe', 'Mary','Jane', 'Jack'],
+                title: 'Now the title is being set through JavaScript.',
+                className: 'color-red',
+                isloading: false,
+                tasks:[
+                    {description:'store', completed:true},
+                    {description:'screencast', completed:false},
+                    {description:'donation', completed:false},
+                    {description:'inbox', completed:false},
+                    {description:'dinner', completed:false},
+                    {description:'room', completed:true}
+                ]
+            },
+
+            methods:{
+                addName(){
+                    this.names.push(this.newName);
+                    this.newName='';//clear up the input
+                },
+                sayHello(){
+                    console.log('hello');
+                },
+                toggleClass(){
+                    if (this.isloading){
+                        this.isloading = false;
+                    }else{
+                        this.isloading = true;
+                    }
+                }
+            },
+
+            computed:{
+                reversedMessage(){
+                    return this.message.split('').reverse().join('');
+                },
+                incompletedTasks(){
+                    return this.tasks.filter(item => !item.completed)
+                }
+            }
+
+//            mounted(){
+//                alert('ready');
+//                document.querySelector('#button').addEventListener('click',()=>{
+////                  let name = document.querySelector('#inputAdd').value;
+//                    let name = document.querySelector('#inputAdd');
+//                    app.names.push(name.value);
+//                    name.value ='';
+//                });
+//            }
+
+
+        });
+
+//        document.querySelector('#button').addEventListener('click',()=>{
+////            let name = document.querySelector('#inputAdd').value;
+//            let name = document.querySelector('#inputAdd');
+//            app.names.push(name.value);
+//            name.value ='';
+//        });
+
+
+//array find
+        console.log([2,4,6,8,10].indexOf(8) > -1);//this is old way to check if the value exist in an array.
+
+        console.log([2,4,6,8,10].includes(8) > -1);
+
+        console.log(
+            [2,4,6,8,10].find(function(item){
+                return item > 5;
+            })
+        );//6 will be return , the first item meet the condition
+
+
+        console.log(
+            [2,4,6,8,10,11].findIndex(item => item % 2 > 0) //arrow syntax for find index of item which meet modulo
+        );
+
+
+        function *numbers(){
+            console.log('begin');
+            yield 1;
+            yield 3;
+            yield 5;
+        }
+        let iterator = numbers();
+        console.log(iterator);
+        console.log(iterator.next().value);
+        console.log(iterator.next());
+        console.log(iterator.next().value);
+        console.log(iterator.next());
+
+
+        function *rang(start,end){
+            while(start <= end){
+                yield start;
+                start++;
+            }
+        }
+//        let ite = rang(1,5);
+////        console.log(ite.next());
+////        console.log(ite.next());
+////        console.log(ite.next());
+////        console.log(ite.next());
+////        console.log(ite.next());
+//        for (let i of ite) console.log(i); //this for-of loop will fetch the value of ite behind of scene for you directly
+
+        console.log([...rang(1,5)]);//spead operator will turn the object into array
+
+        let items = new Set(['one','two','three','one','two','three']);//sets is class will return the unique object for the array.
+        console.log(items);//return an object of set        // set {'one','two','three'}
+        console.log(...items);//return the value of items  //one two three
+        console.log([...items]);//return an array of items //['one','two','three']
+
+        let test = ['12','22','33'];
+        console.log(...test);
+    </script>
+
+
+</body>
+</html>
